@@ -10,7 +10,7 @@ from nested_inline.admin import NestedModelAdmin, NestedStackedInline, NestedTab
 
 from .models import Report, ReportSection, ReportValue
 from .forms import ReportValueModelForm
-from ..template.models import Block, Replace
+from ..template.models import Template, Block, Replace
 
 class ReportValueInline(NestedTabularInline):
     model = ReportValue
@@ -54,21 +54,22 @@ class ReportAdmin(NestedModelAdmin):
         super(ReportAdmin, self).save_formset(request, form, formset, change)
         formset.save()
         for check in formset.forms:
-            value = check.cleaned_data['realvalue']
-            itemvalue = check.cleaned_data['id']
+            if isinstance(check.instance, ReportValue):
+                value = check.cleaned_data['realvalue']
+                itemvalue = check.cleaned_data['id']
 
-            if itemvalue.item.type == 'check':
-                itemvalue.boolean_value = value
-            elif itemvalue.item.type == 'dict':
-                itemvalue.key_value = value
-            elif itemvalue.item.type == 'int':
-                itemvalue.int_value = value
-            elif itemvalue.item.type in [ 'date', 'datetime' ]:
-                itemvalue.date_value = value
-            else:
-                itemvalue.string_value = value
+                if itemvalue.item.type == 'check':
+                    itemvalue.boolean_value = value
+                elif itemvalue.item.type == 'dict':
+                    itemvalue.key_value = value
+                elif itemvalue.item.type == 'int':
+                    itemvalue.int_value = value
+                elif itemvalue.item.type in [ 'date', 'datetime' ]:
+                    itemvalue.date_value = value
+                else:
+                    itemvalue.string_value = value
 
-            itemvalue.save()
+                itemvalue.save()
 
     def get_urls(self):
         urls = super(ReportAdmin, self).get_urls()
@@ -89,10 +90,14 @@ class ReportAdmin(NestedModelAdmin):
 
     def preview(self, request, report_id):
         report = get_object_or_404(Report, pk=report_id)
+        template = Template.objects.get(checklist=report.checklist)
         contentreplaced = []
-        for block in Block.objects.filter(template=report.checklist).order_by('sort'):
+        print report
+        for block in Block.objects.filter(template=template).order_by('sort'):
+            print "block %s" % block
             for replace in Replace.objects.filter(block=block):
-                value = ReportValue.objects.get(item=replace.item, report=report)
+                value = ReportValue.objects.get(item=replace.item, reportsection__in=ReportSection.objects.filter(report=report))
+                print value
                 if not value.isnull():
                     block.content = block.content.replace(replace.replace, value.getValue())
             block.content = block.content.split('\n')
