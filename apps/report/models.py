@@ -1,5 +1,5 @@
 from django.db import models
-from ..checklist.models import Checklist, Item
+from ..checklist.models import Checklist, Section, Item
 from ..dictionary.models import Value
 
 
@@ -11,7 +11,7 @@ class Report(models.Model):
         return u'%s' % self.name
 
     def status(self):
-        values = ReportValue.objects.filter(report=self)
+        values = ReportValue.objects.filter(reportsection__in=ReportSection.objects.filter(report=self))
         total = float(len(values))
         completed = float(0)
         for value in values:
@@ -22,12 +22,23 @@ class Report(models.Model):
 
     def save(self, *args, **kwargs):
         super(Report, self).save(*args, **kwargs)
-        for item in Item.objects.filter(checklist=self.checklist):
-            ReportValue.objects.get_or_create(report=self, item=item)
+        for section in Section.objects.filter(checklist=self.checklist):
+            ( reportsection, created ) = ReportSection.objects.get_or_create(report=self, section=section)
+            if created:
+                for item in Item.objects.filter(section=section):
+                    ReportValue.objects.get_or_create(reportsection=reportsection, item=item)
 
+class ReportSection(models.Model):
+    report = models.ForeignKey(Report)
+    section = models.ForeignKey(Section)
+
+#    def save(self, *args, **kwargs):
+#        super(ReportSection, self).save(*args, **kwargs)
+#        for item in Item.objects.filter(checklist=self.report.checklist, section=self.section):
+#            ReportValue.objects.get_or_create(reportsection=self, item=item)
 
 class ReportValue(models.Model):
-    report = models.ForeignKey(Report)
+    reportsection = models.ForeignKey(ReportSection)
     item = models.ForeignKey(Item)
     string_value = models.CharField(max_length=200,blank=True,null=True)
     boolean_value = models.NullBooleanField(null=True, blank=True)

@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('checklist', '0002_item_sort'),
+        ('checklist', '0001_initial'),
     ]
 
     operations = [

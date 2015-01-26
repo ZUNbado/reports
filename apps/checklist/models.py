@@ -8,9 +8,17 @@ class Checklist(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
-class Item(models.Model):
+class Section(models.Model):
     name = models.CharField(max_length=200)
     checklist = models.ForeignKey(Checklist)
+    sort = models.IntegerField(default=20)
+
+    def __unicode__(self):
+        return u'%s' % self.name
+
+class Item(models.Model):
+    name = models.CharField(max_length=200)
+    section = models.ForeignKey(Section)
     type = models.CharField(max_length=10,choices=(
             ( 'string', 'String' ),
             ( 'check', 'Check Box' ),

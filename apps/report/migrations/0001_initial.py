@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('dictionary', '0001_initial'),
-        ('checklist', '0002_item_sort'),
+        ('checklist', '0001_initial'),
     ]
 
     operations = [
@@ -24,6 +24,17 @@ class Migration(migrations.Migration):
             bases=(models.Model,),
         ),
         migrations.CreateModel(
+            name='ReportSection',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('report', models.ForeignKey(to='report.Report')),
+                ('section', models.ForeignKey(to='checklist.Section')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='ReportValue',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -33,7 +44,7 @@ class Migration(migrations.Migration):
                 ('date_value', models.DateTimeField(null=True, blank=True)),
                 ('item', models.ForeignKey(to='checklist.Item')),
                 ('key_value', models.ForeignKey(blank=True, to='dictionary.Value', null=True)),
-                ('report', models.ForeignKey(to='report.Report')),
+                ('reportsection', models.ForeignKey(to='report.ReportSection')),
             ],
             options={
             },

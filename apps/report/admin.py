@@ -5,12 +5,14 @@ from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from datetime import datetime
+from nested_inline.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
-from .models import Report, ReportValue
+
+from .models import Report, ReportSection, ReportValue
 from .forms import ReportValueModelForm
 from ..template.models import Block, Replace
 
-class ReportValueInline(admin.TabularInline):
+class ReportValueInline(NestedTabularInline):
     model = ReportValue
     extra = 0
     max_num = 0
@@ -23,15 +25,19 @@ class ReportValueInline(admin.TabularInline):
                 }),
             )
 
+class ReportSectionInline(NestedStackedInline):
+    model = ReportSection
+    extra = 0
+    max_num = 0
+    inlines = [ ReportValueInline, ]
 
-
-class ReportAdmin(admin.ModelAdmin):
+class ReportAdmin(NestedModelAdmin):
     def preview_template(self, obj):
         return '<a href="preview/%i/">Preview</a>' % obj.id
     preview_template.allow_tags = True
     preview_template.short_description = 'Preview'
 
-    inlines = [ ReportValueInline, ]
+    inlines = [ ReportSectionInline, ]
     list_display = [ 'name', 'checklist', 'status', 'preview_template' ]
     fieldsets = (
             (None, {
