@@ -1,0 +1,16 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div id="content-main">
+        <h1>{{ report }}</h1>
+        {% for bloc in blocks %}
+        <p><b>{{ bloc.title }}</b></p>
+        {% for text in bloc.content %}
+        <p>{{ text }}</p>
+        {% endfor %}
+        {% endfor %}
+</div>
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+
