@@ -92,12 +92,9 @@ class ReportAdmin(NestedModelAdmin):
         report = get_object_or_404(Report, pk=report_id)
         template = Template.objects.get(checklist=report.checklist)
         contentreplaced = []
-        print report
         for block in Block.objects.filter(template=template).order_by('sort'):
-            print "block %s" % block
             for replace in Replace.objects.filter(block=block):
                 value = ReportValue.objects.get(item=replace.item, reportsection__in=ReportSection.objects.filter(report=report))
-                print value
                 if not value.isnull():
                     block.content = block.content.replace(replace.replace, value.getValue())
             block.content = block.content.split('\n')
