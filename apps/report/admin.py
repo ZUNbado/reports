@@ -31,6 +31,11 @@ class ReportSectionInline(NestedStackedInline):
     max_num = 0
     inlines = [ ReportValueInline, ]
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return [ 'section' ]
+        return []
+
 class ReportAdmin(NestedModelAdmin):
     def preview_template(self, obj):
         return '<a href="preview/%i/">Preview</a>' % obj.id
@@ -100,6 +105,10 @@ class ReportAdmin(NestedModelAdmin):
             }, context_instance=RequestContext(request))
 
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return [ 'checklist' ]
+        return []
 
 
 

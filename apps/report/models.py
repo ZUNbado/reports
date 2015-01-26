@@ -32,10 +32,8 @@ class ReportSection(models.Model):
     report = models.ForeignKey(Report)
     section = models.ForeignKey(Section)
 
-#    def save(self, *args, **kwargs):
-#        super(ReportSection, self).save(*args, **kwargs)
-#        for item in Item.objects.filter(checklist=self.report.checklist, section=self.section):
-#            ReportValue.objects.get_or_create(reportsection=self, item=item)
+    def __unicode__(self):
+        return u'%s' % self.section
 
 class ReportValue(models.Model):
     reportsection = models.ForeignKey(ReportSection)
@@ -45,6 +43,9 @@ class ReportValue(models.Model):
     key_value = models.ForeignKey(Value, null=True, blank=True)
     int_value = models.IntegerField(null=True, blank=True)
     date_value = models.DateTimeField(null=True, blank=True)
+
+    def __unicode__(self):
+        return u'%s' % self.item
 
     def isnull(self):
         if self.item.type == 'string' and self.string_value is not None:
