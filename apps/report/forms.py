@@ -23,8 +23,6 @@ class ReportValueModelForm(forms.ModelForm):
                 realvalue = forms.IntegerField(initial = self.instance.int_value)
             elif item.type == 'date':
                 realvalue = forms.DateField(initial = self.instance.date_value, widget = widgets.AdminDateWidget())
-            elif item.type == 'time':
-                realvalue = forms.TimeField(initial = self.instance.date_value, widget = widgets.AdminTimeWidget())
             elif item.type == 'datetime':
                 realvalue = forms.DateTimeField(initial = self.instance.date_value, widget = widgets.AdminSplitDateTime())
             else:

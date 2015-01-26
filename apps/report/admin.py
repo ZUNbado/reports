@@ -52,7 +52,7 @@ class ReportAdmin(admin.ModelAdmin):
                 itemvalue.key_value = value
             elif itemvalue.item.type == 'int':
                 itemvalue.int_value = value
-            elif itemvalue.item.type in [ 'date', 'time', 'datetime' ]:
+            elif itemvalue.item.type in [ 'date', 'datetime' ]:
                 itemvalue.date_value = value
             else:
                 itemvalue.string_value = value

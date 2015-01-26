@@ -18,7 +18,6 @@ class Item(models.Model):
             ( 'int', 'Integer' ),
             ( 'date', 'Date' ),
             ( 'datetime', 'Date & time' ),
-            ( 'time', 'Time' ),
         )
     )
     dictionary = models.ForeignKey(Dictionary, null=True, blank=True)

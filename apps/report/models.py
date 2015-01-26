@@ -44,7 +44,7 @@ class ReportValue(models.Model):
             return False
         elif self.item.type == 'int' and self.int_value is not None:
             return False
-        elif self.item.type in [ 'date', 'datetime', 'time'] and self.date_value is not None:
+        elif self.item.type in [ 'date', 'datetime' ] and self.date_value is not None:
             return False
         else:
             return True
@@ -55,11 +55,15 @@ class ReportValue(models.Model):
         elif self.item.type == 'check' and self.boolean_value is not None:
             value = self.boolean_value
         elif self.item.type == 'dict' and self.key_value is not None:
-            value = self.key_value.name
+            value = self.key_value
         elif self.item.type == 'int' and self.int_value is not None:
             value = self.int_value
-        elif self.item.type in [ 'date', 'datetime', 'time'] and self.date_value is not None:
+        elif self.item.type in [ 'date', 'datetime' ] and self.date_value is not None:
             value = self.date_value
+            if self.item.type == 'date':
+                value = value.strftime('%d-%m-%Y')
+            else:
+                value = value.strftime('%d-%m-%Y %H:%M')
         else:
             value = None
 
