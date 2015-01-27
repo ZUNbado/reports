@@ -55,7 +55,7 @@ class ReportAdmin(NestedModelAdmin):
     pdf_template.short_description = 'PDF'
 
     inlines = [ ReportSectionInline, ]
-    list_display = [ 'name', 'checklist', 'status', 'preview_template', 'pdf_template' ]
+    list_display = [ 'name', 'template', 'status', 'preview_template', 'pdf_template' ]
     fieldsets = (
             (None, {
                 'fields' : [ 'name', 'checklist'  ]
