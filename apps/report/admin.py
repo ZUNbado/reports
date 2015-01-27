@@ -58,7 +58,7 @@ class ReportAdmin(NestedModelAdmin):
     list_display = [ 'name', 'template', 'status', 'preview_template', 'pdf_template' ]
     fieldsets = (
             (None, {
-                'fields' : [ 'name', 'checklist'  ]
+                'fields' : [ 'name', 'template'  ]
                 }),
             )
 
@@ -103,7 +103,7 @@ class ReportAdmin(NestedModelAdmin):
 
     def get_report_data(self, request, report_id):
         report = get_object_or_404(Report, pk=report_id)
-        template = Template.objects.get(checklist=report.checklist)
+        template = Template.objects.get(checklist=report.template.checklist)
         contentreplaced = []
         for block in Block.objects.filter(template=template).order_by('sort'):
             for replace in Replace.objects.filter(block=block):
@@ -136,7 +136,7 @@ class ReportAdmin(NestedModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return [ 'checklist' ]
+            return [ 'template' ]
         return []
 
 def fetch_resources(uri ):
