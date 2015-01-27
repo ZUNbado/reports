@@ -10,8 +10,6 @@ from datetime import datetime
 from nested_inline.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
 from django.http import HttpResponse
-import ho.pisa as pisa
-import cStringIO as StringIO
 import cgi
 import os
 
@@ -122,6 +120,9 @@ class ReportAdmin(NestedModelAdmin):
         return render_to_response('report/preview.html', self.get_report_data(request, report_id), context_instance=RequestContext(request))
 
     def render_pdf(self, request, report_id):
+        import ho.pisa as pisa
+        import cStringIO as StringIO
+
         data = self.get_report_data(request, report_id)
         data['pagesize'] = 'A4'
         html = render_to_string('report/pdf.html', data)

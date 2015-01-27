@@ -1,11 +1,12 @@
 from django.db import models
+from ..template.models import Template
 from ..checklist.models import Checklist, Section, Item
 from ..dictionary.models import Value
 
 
 class Report(models.Model):
     name = models.CharField(max_length=200)
-    checklist = models.ForeignKey(Checklist)
+    template = models.ForeignKey(Template)
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -22,7 +23,7 @@ class Report(models.Model):
 
     def save(self, *args, **kwargs):
         super(Report, self).save(*args, **kwargs)
-        for section in Section.objects.filter(checklist=self.checklist):
+        for section in Section.objects.filter(checklist=self.template.checklist):
             ( reportsection, created ) = ReportSection.objects.get_or_create(report=self, section=section)
             if created:
                 for item in Item.objects.filter(section=section):
