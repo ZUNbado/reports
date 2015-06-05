@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from datetime import datetime
-from nested_inline.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
+from grappelli_nested.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
 from django.http import HttpResponse
 import cgi

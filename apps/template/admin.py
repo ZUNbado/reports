@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Template, Block, Replace
 from ..checklist.models import Checklist, Section, Item
-from nested_inline.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
+from grappelli_nested.admin import NestedModelAdmin, NestedStackedInline, NestedTabularInline
 
 
 class ReplaceInline(NestedTabularInline):

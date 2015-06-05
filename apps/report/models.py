@@ -14,7 +14,8 @@ class Report(models.Model):
     def status(self):
         values = ReportValue.objects.filter(reportsection__in=ReportSection.objects.filter(report=self))
         total = float(len(values))
-        completed = float(0)
+        if total <= 0: total = 1
+        completed = float(1)
         for value in values:
             if not value.isnull():
                 completed = completed + 1
@@ -24,10 +25,19 @@ class Report(models.Model):
     def save(self, *args, **kwargs):
         super(Report, self).save(*args, **kwargs)
         for section in Section.objects.filter(checklist=self.template.checklist):
-            ( reportsection, created ) = ReportSection.objects.get_or_create(report=self, section=section)
+            try:
+                ReportSection.objects.get(report=self, section=section)
+                created = True
+            except:
+                created = False
+            #( reportsection, created ) = ReportSection.objects.get_or_create(report=self, section=section)
             if created:
                 for item in Item.objects.filter(section=section):
-                    ReportValue.objects.get_or_create(reportsection=reportsection, item=item)
+                    try:
+                        ReportValue.objects.get(reportsection=reportsection, item=item)
+                    except:
+                        ReportValue(reportsection=reportsection, item=item)
+
 
 class ReportSection(models.Model):
     report = models.ForeignKey(Report)
